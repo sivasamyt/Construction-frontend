@@ -31,9 +31,10 @@ import { userService } from '../services/userService'
 import { roleService } from '../services/roleService'
 import type { Role, User } from '../types'
 import { useAppSelector } from '../store/hooks'
-import { hasPermission } from '../utils/permissions'
+import { hasPermission, hasRole } from '../utils/permissions'
 
-const ROLES = ['super_admin', 'admin', 'manager', 'engineer', 'employee', 'guest']
+const ALL_PLATFORM_ROLES = ['super_admin', 'admin', 'manager', 'engineer', 'employee', 'guest']
+const ADMIN_ASSIGNABLE_ROLES = ['manager', 'engineer', 'employee', 'guest']
 
 export default function Users() {
   const { user: currentUser } = useAppSelector((state) => state.auth)
@@ -55,10 +56,16 @@ export default function Users() {
     roles: [] as string[],
   })
 
+  const isSuperAdmin = hasRole(currentUser, ['super_admin'])
+  const assignableRoles = isSuperAdmin ? ALL_PLATFORM_ROLES : ADMIN_ASSIGNABLE_ROLES
+
   const canCreate = hasPermission(currentUser, 'users.create')
   const canUpdate = hasPermission(currentUser, 'users.update')
   const canDelete = hasPermission(currentUser, 'users.delete')
   const canAssignRoles = hasPermission(currentUser, 'users.assign-roles')
+
+  const canManageUser = (user: User) =>
+    isSuperAdmin || !hasRole(user, ['super_admin', 'admin'])
 
   const loadUsers = useCallback(async () => {
     setLoading(true)
@@ -174,10 +181,10 @@ export default function Users() {
                     ))}
                   </TableCell>
                   <TableCell align="right">
-                    {canUpdate && (
+                    {canUpdate && canManageUser(user) && (
                       <IconButton onClick={() => openEdit(user)}><EditIcon /></IconButton>
                     )}
-                    {canDelete && (
+                    {canDelete && canManageUser(user) && (
                       <IconButton color="error" onClick={() => handleDelete(user.id)}>
                         <DeleteIcon />
                       </IconButton>
@@ -217,7 +224,9 @@ export default function Users() {
                   label="Roles"
                   onChange={(e) => setForm({ ...form, roles: e.target.value as string[] })}
                 >
-                  {(roles.length ? roles.map((r) => r.name) : ROLES).map((r) => (
+                  {(roles.length ? roles.map((r) => r.name) : assignableRoles)
+                    .filter((r) => assignableRoles.includes(r))
+                    .map((r) => (
                     <MenuItem key={r} value={r}>{r}</MenuItem>
                   ))}
                 </Select>

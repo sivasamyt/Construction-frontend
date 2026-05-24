@@ -56,6 +56,7 @@ export default function TenantUsers() {
   })
 
   const isOwner = hasRole(currentUser, ['owner'])
+  const isManager = hasRole(currentUser, ['manager'])
   const canCreate = isOwner && hasPermission(currentUser, 'company.users.create')
   const canUpdate = isOwner && hasPermission(currentUser, 'company.users.update')
   const canDelete = isOwner && hasPermission(currentUser, 'company.users.delete')
@@ -128,7 +129,7 @@ export default function TenantUsers() {
     }
   }
 
-  if (!isOwner) {
+  if (!isOwner && !isManager) {
     return (
       <Typography color="text.secondary">
         Only the company owner can manage users.
