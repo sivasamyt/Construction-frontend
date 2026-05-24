@@ -12,6 +12,7 @@ import AppLayout from './components/layout/AppLayout'
 import Home from './pages/Home'
 import RegisterCompany from './pages/RegisterCompany'
 import Login from './pages/Login'
+import Companies from './pages/Companies'
 import Dashboard from './pages/Dashboard'
 import Users from './pages/Users'
 import Roles from './pages/Roles'
@@ -72,6 +73,14 @@ export default function App() {
                   }
                 />
                 <Route path="/profile" element={<Profile />} />
+                <Route
+                  path="/companies"
+                  element={
+                    <RequirePermission roles={['super_admin']}>
+                      <Companies />
+                    </RequirePermission>
+                  }
+                />
                 <Route
                   path="/users"
                   element={

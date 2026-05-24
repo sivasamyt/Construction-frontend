@@ -1,5 +1,5 @@
 import api from './api'
-import type { ApiResponse, Company, DomainPreview, RegisterCompanyPayload } from '../types'
+import type { ApiResponse, Company, DomainPreview, PaginatedResponse, RegisterCompanyPayload } from '../types'
 
 export const companyService = {
   previewDomain: async (domain: string) => {
@@ -13,6 +13,18 @@ export const companyService = {
     const { data } = await api.post<
       ApiResponse<{ company: Company; domain: { domain: string; url: string }; url: string }>
     >('/companies/register', payload)
+    return data
+  },
+
+  list: async (params?: { search?: string; page?: number; per_page?: number }) => {
+    const { data } = await api.get<PaginatedResponse<Company>>('/companies', {
+      params,
+    })
+    return data
+  },
+
+  show: async (id: number) => {
+    const { data } = await api.get<ApiResponse<Company>>(`/companies/${id}`)
     return data
   },
 }

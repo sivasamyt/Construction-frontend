@@ -9,6 +9,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import BusinessIcon from '@mui/icons-material/Business'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import PeopleIcon from '@mui/icons-material/People'
 import SecurityIcon from '@mui/icons-material/Security'
@@ -16,13 +17,14 @@ import VpnKeyIcon from '@mui/icons-material/VpnKey'
 import PersonIcon from '@mui/icons-material/Person'
 import { NavLink } from 'react-router-dom'
 import { useAppSelector } from '../../store/hooks'
-import { hasPermission } from '../../utils/permissions'
+import { hasPermission, hasRole } from '../../utils/permissions'
 import type { MenuItem } from '../../types'
 
 const drawerWidth = 260
 
 const platformMenuItems: MenuItem[] = [
   { label: 'Dashboard', path: '/dashboard', icon: 'dashboard', permission: 'dashboard.view' },
+  { label: 'Companies', path: '/companies', icon: 'business', roles: ['super_admin'] },
   { label: 'Users', path: '/users', icon: 'people', permission: 'users.view' },
   { label: 'Roles', path: '/roles', icon: 'security', permission: 'roles.view' },
   { label: 'Permissions', path: '/permissions', icon: 'vpn_key', permission: 'permissions.view' },
@@ -37,6 +39,7 @@ const tenantMenuItems: MenuItem[] = [
 
 const iconMap: Record<string, ReactNode> = {
   dashboard: <DashboardIcon />,
+  business: <BusinessIcon />,
   people: <PeopleIcon />,
   security: <SecurityIcon />,
   vpn_key: <VpnKeyIcon />,
@@ -57,7 +60,15 @@ export default function Sidebar({ mobileOpen, onClose }: SidebarProps) {
   const menuItems = tenantDomain ? tenantMenuItems : platformMenuItems
 
   const visibleItems = menuItems
-    .filter((item) => !item.permission || hasPermission(user, item.permission))
+    .filter((item) => {
+      if (item.roles?.length) {
+        return hasRole(user, item.roles)
+      }
+      if (item.permission) {
+        return hasPermission(user, item.permission)
+      }
+      return true
+    })
     .map((item) => ({ ...item, path: `${base}${item.path}` }))
 
   const drawer = (

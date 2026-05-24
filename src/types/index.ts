@@ -18,6 +18,12 @@ export interface Domain {
   company_id?: number
 }
 
+export interface CompanyOwner {
+  id: number
+  name: string
+  email: string
+}
+
 export interface Company {
   id: number
   name: string
@@ -25,6 +31,7 @@ export interface Company {
   email: string
   address: string
   domain?: Domain
+  owner?: CompanyOwner | null
   has_owner?: boolean
 }
 
