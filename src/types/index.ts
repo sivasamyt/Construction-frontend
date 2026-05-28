@@ -57,6 +57,18 @@ export interface AuthState {
   loading: boolean
 }
 
+export interface Project {
+  id: number
+  company_id: number
+  name: string
+  description?: string | null
+  status: string
+  start_date?: string | null
+  end_date?: string | null
+  created_at?: string
+  updated_at?: string
+}
+
 export interface RegisterCompanyPayload {
   name: string
   domain: string

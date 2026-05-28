@@ -15,6 +15,7 @@ import PeopleIcon from '@mui/icons-material/People'
 import SecurityIcon from '@mui/icons-material/Security'
 import VpnKeyIcon from '@mui/icons-material/VpnKey'
 import PersonIcon from '@mui/icons-material/Person'
+import FolderIcon from '@mui/icons-material/Folder'
 import { NavLink } from 'react-router-dom'
 import { useAppSelector } from '../../store/hooks'
 import { hasPermission, hasRole } from '../../utils/permissions'
@@ -33,6 +34,7 @@ const platformMenuItems: MenuItem[] = [
 
 const tenantMenuItems: MenuItem[] = [
   { label: 'Dashboard', path: '/dashboard', icon: 'dashboard', permission: 'dashboard.view' },
+  { label: 'Projects', path: '/projects', icon: 'folder', permission: 'company.projects.view' },
   { label: 'Company Users', path: '/users', icon: 'people', permission: 'company.users.view' },
   { label: 'Profile', path: '/profile', icon: 'person' },
 ]
@@ -41,6 +43,7 @@ const iconMap: Record<string, ReactNode> = {
   dashboard: <DashboardIcon />,
   business: <BusinessIcon />,
   people: <PeopleIcon />,
+  folder: <FolderIcon />,
   security: <SecurityIcon />,
   vpn_key: <VpnKeyIcon />,
   person: <PersonIcon />,

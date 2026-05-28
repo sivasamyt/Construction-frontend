@@ -23,6 +23,7 @@ import CompanyLanding from './pages/CompanyLanding'
 import TenantLogin from './pages/TenantLogin'
 import TenantRegister from './pages/TenantRegister'
 import TenantUsers from './pages/TenantUsers'
+import TenantProjects from './pages/TenantProjects'
 import { isPlatformRoute } from './utils/tenant'
 
 function AuthBootstrap({ children }: { children: React.ReactNode }) {
@@ -128,6 +129,14 @@ export default function App() {
                     element={
                       <RequirePermission permission="company.users.view">
                         <TenantUsers />
+                      </RequirePermission>
+                    }
+                  />
+                  <Route
+                    path="projects"
+                    element={
+                      <RequirePermission permission="company.projects.view">
+                        <TenantProjects />
                       </RequirePermission>
                     }
                   />

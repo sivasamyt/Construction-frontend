@@ -8,6 +8,7 @@ export const PLATFORM_ROUTES = new Set([
   'profile',
   'unauthorized',
   'companies',
+  'projects',
 ])
 
 export function isPlatformRoute(segment: string): boolean {
